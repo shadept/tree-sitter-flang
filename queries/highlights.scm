@@ -15,6 +15,7 @@
   "fn"
   "struct"
   "enum"
+  "type"
   "let"
   "const"
   "test"
@@ -69,11 +70,18 @@
 (enum_variant
   name: (identifier) @type.variant)
 
+; Type declaration
+(type_declaration
+  name: (identifier) @type.definition)
+
 ; Function definition
 (function_definition
   name: (identifier) @function.definition)
 
 (parameter
+  name: (identifier) @variable.parameter)
+
+(variadic_parameter
   name: (identifier) @variable.parameter)
 
 ; Lambda expressions
@@ -142,7 +150,27 @@
 (field_shorthand
   (identifier) @property)
 
+; Source generators
+(generator_definition
+  "#define" @attribute)
+
+(generator_definition
+  name: (identifier) @function.definition)
+
+(generator_parameter
+  name: (identifier) @variable.parameter)
+
+(generator_parameter
+  kind: (identifier) @type)
+
+(generator_invocation
+  (directive) @attribute)
+
+(generator_argument
+  (identifier) @variable)
+
 ; Literals
+(float_literal) @number
 (number_literal) @number
 (string_literal) @string
 (char_literal) @string

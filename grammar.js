@@ -58,8 +58,11 @@ module.exports = grammar({
         $.function_definition,
         $.struct_definition,
         $.enum_definition,
+        $.type_declaration,
         $.const_declaration,
         $.import_declaration,
+        $.generator_definition,
+        $.generator_invocation,
         $.test_block,
       ),
 
@@ -87,9 +90,27 @@ module.exports = grammar({
       ),
 
     parameter_list: ($) =>
-      seq('(', optional(seq($.parameter, repeat(seq(',', $.parameter)), optional(','))), ')'),
+      seq(
+        '(',
+        optional(
+          choice(
+            seq($.parameter, repeat(seq(',', $.parameter)), optional(seq(',', $.variadic_parameter)), optional(',')),
+            $.variadic_parameter,
+          ),
+        ),
+        ')',
+      ),
 
-    parameter: ($) => seq(field('name', $.identifier), ':', field('type', $.type)),
+    variadic_parameter: ($) =>
+      seq('..', field('name', $.identifier), ':', field('type', $.type)),
+
+    parameter: ($) =>
+      seq(
+        field('name', $.identifier),
+        ':',
+        field('type', $.type),
+        optional(seq('=', field('default', $.expression))),
+      ),
 
     // ===== STRUCTS =====
     struct_definition: ($) =>
@@ -127,6 +148,19 @@ module.exports = grammar({
 
     variant_parameters: ($) =>
       seq('(', optional(seq($.type, repeat(seq(',', $.type)), optional(','))), ')'),
+
+    // ===== TYPE DECLARATIONS =====
+    type_declaration: ($) =>
+      seq(
+        optional($.visibility_modifier),
+        'type',
+        field('name', $.identifier),
+        '=',
+        choice(
+          seq('struct', optional($.generic_parameters), $.struct_body),
+          seq('enum', optional($.generic_parameters), $.enum_body),
+        ),
+      ),
 
     // ===== GENERICS =====
     generic_parameters: ($) =>
@@ -166,6 +200,8 @@ module.exports = grammar({
         'void',
         'bool',
         'char',
+        'f32',
+        'f64',
         'i8',
         'i16',
         'i32',
@@ -343,6 +379,7 @@ module.exports = grammar({
       choice(
         $.identifier,
         $.boolean_literal,
+        $.float_literal,
         $.number_literal,
         $.char_literal,
         $.null_literal,
@@ -444,6 +481,15 @@ module.exports = grammar({
     optional_chain_expression: ($) => prec.left('member', seq($.expression, '?.', $.identifier)),
 
     // ===== LITERALS =====
+    float_literal: ($) =>
+      token(
+        choice(
+          /[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?(f32|f64)?/,
+          /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*(f32|f64)?/,
+          /[0-9][0-9_]*(f32|f64)/,
+        ),
+      ),
+
     number_literal: ($) =>
       choice(
         /0x[0-9a-fA-F_]+/,
@@ -474,6 +520,57 @@ module.exports = grammar({
 
     // ===== TESTS =====
     test_block: ($) => seq('test', field('name', $.string_literal), field('body', $.block)),
+
+    // ===== SOURCE GENERATORS =====
+    generator_definition: ($) =>
+      seq(
+        '#define',
+        '(',
+        field('name', $.identifier),
+        ',',
+        $.generator_parameter,
+        repeat(seq(',', $.generator_parameter)),
+        optional(','),
+        ')',
+        field('body', $.generator_body),
+      ),
+
+    generator_parameter: ($) =>
+      seq(
+        optional('..'),
+        field('name', $.identifier),
+        ':',
+        field('kind', $.identifier),
+      ),
+
+    generator_body: ($) => seq('{', repeat(choice(/[^{}]+/, $.generator_body)), '}'),
+
+    generator_invocation: ($) =>
+      seq(
+        $.directive,
+        '(',
+        optional(
+          seq(
+            $.generator_argument,
+            repeat(seq(',', $.generator_argument)),
+            optional(','),
+          ),
+        ),
+        ')',
+      ),
+
+    generator_argument: ($) =>
+      choice(
+        $.anonymous_struct_type,
+        $.anonymous_enum_type,
+        $.identifier,
+      ),
+
+    anonymous_struct_type: ($) =>
+      seq('struct', optional($.generic_parameters), $.struct_body),
+
+    anonymous_enum_type: ($) =>
+      seq('enum', optional($.generic_parameters), $.enum_body),
 
     // ===== COMMENTS =====
     line_comment: ($) => seq('//', /.*/),

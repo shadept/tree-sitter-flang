@@ -1,5 +1,24 @@
 [
   {
+    "type": "anonymous_enum_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "enum_body",
+          "named": true
+        },
+        {
+          "type": "generic_parameters",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "anonymous_struct_literal",
     "named": true,
     "fields": {},
@@ -13,6 +32,25 @@
         },
         {
           "type": "field_shorthand",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "anonymous_struct_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "generic_parameters",
+          "named": true
+        },
+        {
+          "type": "struct_body",
           "named": true
         }
       ]
@@ -650,6 +688,125 @@
     }
   },
   {
+    "type": "generator_argument",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "anonymous_enum_type",
+          "named": true
+        },
+        {
+          "type": "anonymous_struct_type",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "generator_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "generator_body",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "generator_definition",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "generator_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "generator_parameter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "generator_invocation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "generator_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "generator_parameter",
+    "named": true,
+    "fields": {
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "generic_arguments",
     "named": true,
     "fields": {},
@@ -1069,6 +1226,16 @@
     "type": "parameter",
     "named": true,
     "fields": {
+      "default": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1101,6 +1268,10 @@
       "types": [
         {
           "type": "parameter",
+          "named": true
+        },
+        {
+          "type": "variadic_parameter",
           "named": true
         }
       ]
@@ -1151,6 +1322,10 @@
         },
         {
           "type": "dereference_expression",
+          "named": true
+        },
+        {
+          "type": "float_literal",
           "named": true
         },
         {
@@ -1276,6 +1451,14 @@
           "named": true
         },
         {
+          "type": "generator_definition",
+          "named": true
+        },
+        {
+          "type": "generator_invocation",
+          "named": true
+        },
+        {
           "type": "import_declaration",
           "named": true
         },
@@ -1285,6 +1468,10 @@
         },
         {
           "type": "test_block",
+          "named": true
+        },
+        {
+          "type": "type_declaration",
           "named": true
         }
       ]
@@ -1511,6 +1698,44 @@
     }
   },
   {
+    "type": "type_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "enum_body",
+          "named": true
+        },
+        {
+          "type": "generic_parameters",
+          "named": true
+        },
+        {
+          "type": "struct_body",
+          "named": true
+        },
+        {
+          "type": "visibility_modifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "unary_expression",
     "named": true,
     "fields": {},
@@ -1523,6 +1748,32 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "variadic_parameter",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1569,6 +1820,10 @@
   },
   {
     "type": "\"",
+    "named": false
+  },
+  {
+    "type": "#define",
     "named": false
   },
   {
@@ -1740,8 +1995,20 @@
     "named": true
   },
   {
+    "type": "f32",
+    "named": false
+  },
+  {
+    "type": "f64",
+    "named": false
+  },
+  {
     "type": "false",
     "named": false
+  },
+  {
+    "type": "float_literal",
+    "named": true
   },
   {
     "type": "fn",
@@ -1821,6 +2088,10 @@
   },
   {
     "type": "true",
+    "named": false
+  },
+  {
+    "type": "type",
     "named": false
   },
   {
