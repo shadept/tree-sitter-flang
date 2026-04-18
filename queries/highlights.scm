@@ -30,6 +30,7 @@
   "return"
   "defer"
   "loop"
+  "while"
 ] @keyword.control
 
 (break_statement) @keyword.control

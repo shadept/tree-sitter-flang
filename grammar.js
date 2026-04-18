@@ -253,6 +253,7 @@ module.exports = grammar({
         $.defer_statement,
         $.for_statement,
         $.loop_statement,
+        $.while_statement,
         $.break_statement,
         $.continue_statement,
         $.expression_statement,
@@ -280,6 +281,9 @@ module.exports = grammar({
     defer_statement: ($) => seq('defer', $.expression),
 
     loop_statement: ($) => seq('loop', field('body', $.block)),
+
+    while_statement: ($) =>
+      seq('while', field('condition', $.expression), field('body', $.block)),
 
     break_statement: ($) => 'break',
 
